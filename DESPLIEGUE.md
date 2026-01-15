@@ -2,6 +2,8 @@
 
 Este documento recopila todas las evidencias y respuestas de la practica.
 
+**NOTA**: Para la práctica he utiliza nginx y sftp como nombres de los contenedores.
+
 ---
 
 ## Parte 1 — Evidencias minimas
@@ -76,6 +78,59 @@ Este documento recopila todas las evidencias y respuestas de la practica.
 
 ### a) Parametros de administracion
 - Respuesta:
+
+**1.** Evidencia de los fragmentos de los parametros de administración pedidos:
+[Evidencia A-1](evidencias/a-01-grep-nginxconf.png)
+
+**2.** Directivas:
+
+**worker_processes**
+- Controla: Define el número de procesos de trabajo.
+- Configuración realista incorrecta: Poniendo un valor negativo (ej -1).
+- Lo comprobaría mediante el comando "docker compose exec nginx nginx -t" que valida la configuración, la evidencia se encuentra al final de este punto.
+
+**worker_connections**
+- Controla: Establece el número máximo de conexiones simultáneas que puede ser abierto por un proceso de trabajo.
+- Configuración realista incorrecta: Poniendo un valor negativo (ej -1).
+- Lo comprobaría mediante el comando "docker compose exec nginx nginx -t" que valida la configuración, la evidencia se encuentra al final de este punto.
+
+**access_log**
+- Controla: Define archivos de log de acceso específicos para el sitio.
+- Configuración realista incorrecta: Da error si se pone ningun valor.
+- Lo comprobaría mediante el comando "docker compose exec nginx nginx -t" que valida la configuración, la evidencia se encuentra al final de este punto.
+
+**error_log**
+- Controla: Define archivos de log de error específicos para el sitio.
+- Configuración realista incorrecta: Da error si no se pone ningún valor.
+- Lo comprobaría mediante el comando "docker compose exec nginx nginx -t" que valida la configuración, la evidencia se encuentra al final de este punto.
+
+**keepalive_timeout**
+- Controla: establece un tiempo de espera durante el cual una conexión del cliente viva permanecerá abierta en el lado del servidor.
+- Configuración realista incorrecta: Poniendo un valor negativo (ej -35)
+- Lo comprobaría mediante el comando "docker compose exec nginx nginx -t" que valida la configuración, la evidencia se encuentra al final de este punto.
+
+**include**
+- Controla: Para incluir configuraciones adicionales
+- Configuración realista incorrecta: Da error si no se incluye ningún valor.
+- Lo comprobaría mediante el comando "docker compose exec nginx nginx -t" que valida la configuración, la evidencia se encuentra al final de este punto.
+
+**gzip**
+- Controla: Permite la compresión.
+- Configuración realista incorrecta: Cualquier valor que no sea on y off.
+- Lo comprobaría mediante el comando "docker compose exec nginx nginx -t" que valida la configuración, la evidencia se encuentra al final de este punto.
+
+Para comprobar si la configuración es correcta utilizaría este comando "docker compose exec nginx nginx -t" que valida la configuración.
+
+Evidencia de la validación de la configuración incorrecta:
+[Evidencia A-2](evidencias/a-02-nginx-t.png)
+
+**3.** Cambio seguro y reload:
+
+He ajustado keepalive_timeout de 65 a 35 editando el nginx.conf local. Y he recargado la configuración de nginx mediante el comando "docker compose exec nginx nginx -s reload"
+
+Evidencia del cambio y la recarga:
+
+[Evidencia A-3](evidencias/a-03-reload.png)
 - Evidencias:
   - evidencias/a-01-grep-nginxconf.png
   - evidencias/a-02-nginx-t.png
