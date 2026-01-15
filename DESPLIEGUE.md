@@ -8,58 +8,67 @@ Este documento recopila todas las evidencias y respuestas de la practica.
 
 ### Fase 1: Instalacion y configuracion
 
+
 1) Servicio Nginx activo
-- Que demuestra:
-- Comando:
-- Evidencia:
+ - Que demuestra: Muestra que el servicio Nginx está en ejecución dentro del entorno Docker.
+ - Comando: docker compose ps
+ - Evidencia: ![Evidencia 1](evidencias/requisito1.png)
 
 2) Configuracion cargada
-- Que demuestra:
-- Comando:
-- Evidencia:
+ - Que demuestra: El archivo de configuración cargado.
+ - Comando: "ls -l /etc/nginx/conf.d/" dentro del contenedor de nginx
+ - Evidencia: ![Evidencia 2](evidencias/requisito2.png)
 
 3) Resolucion de nombres
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: Demuestra que la web usa ese nombre.
+ - Comando: En este caso no he utilizado comando, lo he verificado directamente en el navegador.
+ - Evidencia: ![Evidencia 3](evidencias/requisito3.png)
 
 4) Contenido Web
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: El contenido importado de Cloud Academy se muestra correctamente en la web.
+ - Comando: En este caso no he utilizado comando, lo he verificado directamente en el navegador.
+ - Evidencia: ![Evidencia 4](evidencias/requisito4.png)
 
 ### Fase 2: Transferencia SFTP (Filezilla)
 
 5) Conexion SFTP exitosa
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: Conexión SFTP exitosa al servidor con FileZilla.
+ - Comando: En este caso no he utilizado comando, lo he verificado con FileZilla.
+ - Evidencia: ![Evidencia 5](evidencias/requisito5.png)
 
 6) Permisos de escritura
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: Archivos subidos por SFTP sin problema de permisos.
+ - Comando: En este caso no he utilizado comando, lo he verificado con FileZilla.
+ - Evidencia: ![Evidencia 6](evidencias/requisito6.png)
 
 ### Fase 3: Infraestructura Docker
 
 7) Contenedores activos
-- Que demuestra:
-- Comando:
-- Evidencia:
+ - Que demuestra: Los contenedores están arrancados.
+ - Comando: docker compose ps
+ - Evidencia: ![Evidencia 7](evidencias/requisito7.png)
 
 8) Persistencia (Volumen compartido)
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: Los ficheros subidos via SFTP se sirven desde Nginx.
+ - Comando: En este caso no he utilizado comando, lo he verificado directamente en el navegador y los ficheros con FileZilla.`
+ - Evidencia: ![Evidencia 8](evidencias/requisito8.png)
 
 9) Despliegue multi-sitio
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: La ruta "/reloj" está servida correctamente como sitio secundario.
+ - Comando: En este caso no he utilizado comando, lo he verificado en el navegador.
+ - Evidencia: ![Evidencia 9](evidencias/requisito9.png)
 
 ### Fase 4: Seguridad HTTPS
 
 10) Cifrado SSL
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: HTTPS está activo, el puerto 8433 configurado y que el certificado está autofirmado.
+ - Comando: En este caso no he utilizado comando, lo he verificado en el navegador.
+ - Evidencia: ![Evidencia 10](evidencias/requisito10.png)
 
 11) Redireccion forzada
-- Que demuestra:
-- Evidencia:
+ - Que demuestra: Las peticiones HTTP son redirigidas a HTTPS con un 301 Moved Permanently.
+ - Comando: En este caso no he utilizado comando, lo he verificado en el navegador en la pestaña network.
+ - Evidencia: ![Evidencia 11](evidencias/requisito11.png)
 
 ---
 
