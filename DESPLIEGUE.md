@@ -80,7 +80,7 @@ Este documento recopila todas las evidencias y respuestas de la practica.
 - Respuesta:
 
 **1.** Evidencia de los fragmentos de los parametros de administración pedidos:
-[Evidencia A-1](evidencias/a-01-grep-nginxconf.png)
+![Evidencia A-1](evidencias/a-01-grep-nginxconf.png)
 
 **2.** Directivas:
 
@@ -122,7 +122,7 @@ Este documento recopila todas las evidencias y respuestas de la practica.
 Para comprobar si la configuración es correcta utilizaría este comando "docker compose exec nginx nginx -t" que valida la configuración.
 
 Evidencia de la validación de la configuración incorrecta:
-[Evidencia A-2](evidencias/a-02-nginx-t.png)
+![Evidencia A-2](evidencias/a-02-nginx-t.png)
 
 **3.** Cambio seguro y reload:
 
@@ -130,7 +130,7 @@ He ajustado keepalive_timeout de 65 a 35 editando el nginx.conf local. Y he reca
 
 Evidencia del cambio y la recarga:
 
-[Evidencia A-3](evidencias/a-03-reload.png)
+![Evidencia A-3](evidencias/a-03-reload.png)
 - Evidencias:
   - evidencias/a-01-grep-nginxconf.png
   - evidencias/a-02-nginx-t.png
@@ -138,12 +138,16 @@ Evidencia del cambio y la recarga:
 
 ### b) Ampliacion de funcionalidad + modulo investigado
 - Opcion elegida (B1 o B2):
-- Respuesta:
+- Respuesta: B1
 - Evidencias (B1 o B2):
   - evidencias/b1-01-gzipconf.png
+  ![Evidencia B1-1](evidencias/b1-01-gzipconf.png)
   - evidencias/b1-02-compose-volume-gzip.png
+  ![Evidencia B1-2](evidencias/b1-02-compose-volume-gzip.png)
   - evidencias/b1-03-nginx-t.png
+  ![Evidencia B1-3](evidencias/b1-03-nginx-t.png)
   - evidencias/b1-04-curl-gzip.png
+  ![Evidencia B1-4](evidencias/b1-04-curl-gzip.png)
   - evidencias/b2-01-defaultconf-headers.png
   - evidencias/b2-02-nginx-t.png
   - evidencias/b2-03-curl-https-headers.png
@@ -157,29 +161,41 @@ Evidencia del cambio y la recarga:
 - Respuesta:
 - Evidencias:
   - evidencias/c-01-root.png
+![Evidencia C-1](evidencias/c-01-root.png)
   - evidencias/c-02-reloj.png
+![Evidencia C-2](evidencias/c-02-reloj.png)
   - evidencias/c-03-defaultconf-inside.png
+![Evidencia C-3](evidencias/c-03-defaultconf-inside.png)
 
 ### d) Autenticacion y control de acceso
 - Respuesta:
 - Evidencias:
   - evidencias/d-01-admin-html.png
+![Evidencia D-1](evidencias/d-01-admin-html.png)
   - evidencias/d-02-defaultconf-auth.png
+![Evidencia D-2](evidencias/d-02-defaultconf-auth.png)
   - evidencias/d-03-curl-401.png
+![Evidencia D-3](evidencias/d-03-curl-401.png)
   - evidencias/d-04-curl-200.png
+![Evidencia D-4](evidencias/d-04-curl-200.png)
 
 ### e) Certificados digitales
 - Respuesta:
 - Evidencias:
   - evidencias/e-01-ls-certs.png
+![Evidencia E-1](evidencias/e-01-ls-certs.png)
   - evidencias/e-02-compose-certs.png
+![Evidencia E-2](evidencias/e-02-compose-certs.png)
   - evidencias/e-03-defaultconf-ssl.png
+![Evidencia E-3](evidencias/e-03-defaultconf-ssl.png)
 
 ### f) Comunicaciones seguras
 - Respuesta:
 - Evidencias:
   - evidencias/f-01-https.png
+![Evidencia F-1](evidencias/c-03-defaultconf-inside.png)
   - evidencias/f-02-301-network.png
+![Evidencia F-2](evidencias/f-02-301-network.png)
 
 ### g) Documentacion
 - Respuesta:
@@ -189,44 +205,54 @@ Evidencia del cambio y la recarga:
 - Respuesta:
 - Evidencias:
   - evidencias/h-01-root.png
+![Evidencia H-1](evidencias/h-01-root.png)
   - evidencias/h-02-reloj.png
+![Evidencia H-2](evidencias/h-02-reloj.png)
 
 ### i) Virtualizacion en despliegue
 - Respuesta:
 - Evidencias:
   - evidencias/i-01-compose-ps.png
+![Evidencia I-1](evidencias/i-01-compose-ps.png)
 
 ### j) Logs: monitorizacion y analisis
 - Respuesta:
 - Evidencias:
   - evidencias/j-01-logs-follow.png
+![Evidencia J-1](evidencias/j-01-logs-follow.png)
   - evidencias/j-02-metricas.png
+![Evidencia J-2](evidencias/j-02-metricas.png)
+```
+docker compose exec web sh -c "awk '{print \$7}' /var/log/nginx/access.log | sort | uniq -c | sort -nr | head"
+docker compose exec web sh -c "awk '{print \$9}' /var/log/nginx/access.log | sort | uniq -c | sort -nr | head"
+docker compose exec web sh -c "awk '\$9==404 {print \$7}' /var/log/nginx/access.log | sort | uniq -c | sort -nr | head"
+```
 
 ---
 
 ## Checklist final
 
 ### Parte 1
-- [ ] 1) Servicio Nginx activo
-- [ ] 2) Configuracion cargada
-- [ ] 3) Resolucion de nombres
-- [ ] 4) Contenido Web (Cloud Academy)
-- [ ] 5) Conexion SFTP exitosa
-- [ ] 6) Permisos de escritura
-- [ ] 7) Contenedores activos
-- [ ] 8) Persistencia (Volumen compartido)
-- [ ] 9) Despliegue multi-sitio (/reloj)
-- [ ] 10) Cifrado SSL
-- [ ] 11) Redireccion forzada (301)
+- [✔️] 1) Servicio Nginx activo
+- [✔️] 2) Configuracion cargada
+- [✔️] 3) Resolucion de nombres
+- [✔️] 4) Contenido Web (Cloud Academy)
+- [✔️] 5) Conexion SFTP exitosa
+- [✔️] 6) Permisos de escritura
+- [✔️] 7) Contenedores activos
+- [✔️] 8) Persistencia (Volumen compartido)
+- [✔️] 9) Despliegue multi-sitio (/reloj)
+- [✔️] 10) Cifrado SSL
+- [✔️] 11) Redireccion forzada (301)
 
 ### Parte 2 (RA2)
-- [ ] a) Parametros de administracion
+- [✔️] a) Parametros de administracion
 - [ ] b) Ampliacion de funcionalidad + modulo investigado
 - [ ] c) Sitios virtuales / multi-sitio
-- [ ] d) Autenticacion y control de acceso
-- [ ] e) Certificados digitales
-- [ ] f) Comunicaciones seguras
+- [✔️] d) Autenticacion y control de acceso
+- [✔️] e) Certificados digitales
+- [✔️] f) Comunicaciones seguras
 - [ ] g) Documentacion
-- [ ] h) Ajustes para implantacion de apps
+- [✔️] h) Ajustes para implantacion de apps
 - [ ] i) Virtualizacion en despliegue
 - [ ] j) Logs: monitorizacion y analisis
