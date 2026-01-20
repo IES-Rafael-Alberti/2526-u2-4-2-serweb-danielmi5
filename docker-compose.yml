@@ -13,6 +13,7 @@ services:
       - ./nginx-selfsigned.crt:/etc/nginx/certificados/nginx-selfsigned.crt:ro
       - ./nginx-selfsigned.key:/etc/nginx/certificados/nginx-selfsigned.key:ro
       - ./gzip.conf:/etc/nginx/conf.d/gzip.conf:ro
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro
       - archivos_compartidos:/usr/share/nginx/html
     depends_on:
       - sftp
