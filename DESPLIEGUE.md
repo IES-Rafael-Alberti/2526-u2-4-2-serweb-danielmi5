@@ -239,6 +239,7 @@ Evidencia de acceso con credenciales devolviendo 200 con el comando "curl -I -k 
 ### e) Certificados digitales
 - Respuesta:
 
+
 **¿Qué es .crt y .key?**
 
 El .crt (público) es el certificado del sitio web, contiene el nombre del dominio, la fecha de caducidad y quién emitió el certificado. El .key (privada) es una clave para descifrar la información que los usuarios envían al servidor.
@@ -269,11 +270,11 @@ Evidencia de configuración añadida al archivo default.conf:
 Evidencia de HTTPS operativo:  
 ![Evidencia F-1](evidencias/f-01-https.png)
 
-Evidencia sw redirección HTTP→HTTPS con 301: 
+Evidencia de la redirección HTTP-->HTTPS con 301: 
 ![Evidencia F-2](evidencias/f-02-301-network.png)
 
 **¿Por qué se usan dos server blocks (80 redirige, 443 sirve)?**
-En HTTP se escucha en el puerto 80 sin cifrar y se usa para captar peticiones iniciales; ese bloque solo hace una redirección hacia la versión segura para obligar HTTPS, mientras que el bloque en 443 gestiona las conexiones cifradas con el certificado y las configuraciones específicas de seguridad, separando responsabilidades.
+En HTTP se escucha en el puerto 80 sin cifrar y se usa para obtener peticiones iniciales, ese bloque solo hace una redirección hacia la versión segura para obligar HTTPS. Y el bloque en 443 gestiona las conexiones cifradas con el certificado y las configuraciones específicas de seguridad, separando responsabilidades.
 
 
 - Evidencias:
@@ -283,7 +284,60 @@ En HTTP se escucha en el puerto 80 sin cifrar y se usa para captar peticiones in
 
 ### g) Documentacion
 - Respuesta:
-- Evidencias: enlaces a todas las capturas
+
+**Arquitectura**
+
+- Servicios: 
+  - nginx: contenedor principal que sirve el contenido web y gestiona HTTPS/HTTP. Imagen: nginx:latest. Depende de sftp para disponer de los ficheros subidos.
+  - sftp: servidor SFTP para transferencia de ficheros (usado FileZilla). Imagen: atmoz/sftp.
+
+- Puertos mapeados(host:contenedor):
+  - 8443:443: HTTPS.
+  - 8080:80: HTTP.
+  - 2222:22: SFTP.
+
+- Volúmenes:
+  - archivos_compartidos: volumen nombrado compartido entre `sftp` y `nginx`.
+    
+  - Bind mounts (ro: solo lectura):
+    - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+    - ./gzip.conf:/etc/nginx/conf.d/gzip.conf:ro
+    - ./nginx-selfsigned.crt:/etc/nginx/certificados/nginx-selfsigned.crt:ro
+    - ./nginx-selfsigned.key:/etc/nginx/certificados/nginx-selfsigned.key:ro
+    - ./.htpasswd:/etc/nginx/.htpasswd:ro.
+
+**Seguridad**
+
+- Certificados: nginx-selfsigned.crt y nginx-selfsigned.key se montan en /etc/nginx/certificados. HTTPS está expuesto en el host en el puerto 8443 (map 8443:443).
+- Redirección: el bloque en puerto 80 realiza una redirección 301 hacia la versión HTTPS obligatoria.
+- Opción B elegida: B1 (gzip): gzip configurado en gzip.conf y montado en /etc/nginx/conf.d/gzip.conf para comprimir respuestas.
+
+**Autenticación /admin**
+
+- Se ha habilitado auth_basic para la ruta /admin usando un archivo .htpasswd montado en /etc/nginx/.htpasswd:ro. Sin credenciales devuelve 401 y con credenciales válidas devuelve 200.
+
+**Logs y análisis (criterio j)**
+
+Acceso a logs de los contenedores mediante: docker compose logs. Para análisis se emplearon comandos que peticiones, para luego extraer sus métricas
+
+**Evidencias Parte 1**
+
+- requisito1-11.png
+
+**Evidencias Parte 2**
+
+- a-01-grep-nginxconf.png  a-02-nginx-t.png  a-03-reload.png
+- b1-01-gzipconf.png  b1-02-compose-volume-gzip.png  b1-03-nginx-t.png  b1-04-curl-gzip.png
+- c-01-root.png  c-02-reloj.png  c-03-defaultconf-inside.png
+- d-01-admin-html.png  d-02-defaultconf-auth.png  d-03-curl-401.png  d-04-curl-200.png
+- e-01-ls-certs.png  e-02-compose-certs.png  e-03-defaultconf-ssl.png
+- f-01-https.png  f-02-301-network.png
+- h-01-root.png  h-02-reloj.png
+- i-01-compose-ps.png
+- j-01-logs-follow.png  j-02-metricas.png
+
+Todas las capturas están disponibles en la carpeta evidencias y en la checklist están también.
 
 ### h) Ajustes para implantacion de apps
 - Respuesta:
@@ -309,23 +363,42 @@ Evidencias de / y /reloj funcionando:
 
 ### i) Virtualizacion en despliegue
 - Respuesta:
+
+**Explica diferencia operativa entre instalacion nativa en SO y contenedor efimero + configuracion por volumenes.**
+
+Al intalar en SO, el programa, las dependencias y los datos se guarda todo en el SO. En cambio, mediante contenedor todos los servicios quedan aislados por lo que el programa no toca el SO, ni los archivos innecesarios como las dependencias se quedan guardados, lo que lo hace fácil de eliminar sin dejar rastro y solo se guardan fuera los datos en volúmenes.
+
+Evidencia de contenedores en marcha:  
+![Evidencia I-1](evidencias/i-01-compose-ps.png)
+
 - Evidencias:
   - evidencias/i-01-compose-ps.png
-![Evidencia I-1](evidencias/i-01-compose-ps.png)
 
 ### j) Logs: monitorizacion y analisis
 - Respuesta:
-- Evidencias:
-  - evidencias/j-01-logs-follow.png
-![Evidencia J-1](evidencias/j-01-logs-follow.png)
-  - evidencias/j-02-metricas.png
-Comandos utilizados para obtener los logs:
+
+Se ha generado tráfico y errores 404 mediante estos comandos: 
+```bash
+for i in $(seq 1 20); do curl -s -o /dev/null http://localhost:8080/; done
+for i in $(seq 1 10); do curl -s -o /dev/null http://localhost:8080/no-existe-$i; done
 ```
+Evidencia de monitorización en tiempo real:  
+![Evidencia J-1](evidencias/j-01-logs-follow.png)
+
+Comandos utilizados para obtener los logs de las métricas:
+```bash
 docker compose logs nginx | awk '{print $7}' | sort | uniq -c | sort -nr | head
 docker compose logs nginx | awk '{print $9}' | sort | uniq -c | sort -nr | head
 docker compose logs nginx --no-log-prefix | awk '$9==404 {print $7}' | sort | uniq -c | sort -nr | head
 ```
-![Evidencia J-2](evidencias/j-02-metricas.png)
+
+Evidencia de la extracción sw metricas basicas (top URLs, codigos, 404) desde el contenedor.
+
+
+
+- Evidencias:
+  - evidencias/j-01-logs-follow.png
+  - evidencias/j-02-metricas.png
 
 ---
 
