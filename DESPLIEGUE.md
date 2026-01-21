@@ -394,7 +394,7 @@ docker compose logs nginx --no-log-prefix | awk '$9==404 {print $7}' | sort | un
 
 Evidencia de la extracción sw metricas basicas (top URLs, codigos, 404) desde el contenedor.
 
-
+![Evidencia J-2](evidencias/j-02-metricas.png)
 
 - Evidencias:
   - evidencias/j-01-logs-follow.png
