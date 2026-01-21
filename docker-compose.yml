@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "8443:443"
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx-selfsigned.crt:/etc/nginx/certificados/nginx-selfsigned.crt:ro
+      - ./nginx-selfsigned.key:/etc/nginx/certificados/nginx-selfsigned.key:ro
+      - ./gzip.conf:/etc/nginx/conf.d/gzip.conf:ro
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro
+      - archivos_compartidos:/usr/share/nginx/html
+    depends_on:
+      - sftp
+
+  sftp:
+    container_name: sftp
+    image: atmoz/sftp
+    ports:
+      - "2222:22"
+    volumes:
+      - archivos_compartidos:/home/${SFTP_USER}/archivos
+    command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_UID}
+
+volumes:
+  archivos_compartidos:
+
+
+
+
